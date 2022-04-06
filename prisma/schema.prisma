@@ -10,10 +10,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model DeliveryMan {
+model DeliveryMen {
   id       String @id @default(uuid())
   username String @unique
   password String
 
-  @@map("deliveryman")
+  Deliveries Deliveries[]
+  @@map("deliverymen")
+}
+
+model Customers {
+  id       String @id @default(uuid())
+  username String @unique
+  password String
+
+  @@map("customers")
+  Deliveries Deliveries[]
+}
+
+model Deliveries {
+  id             String      @id @default(uuid())
+  id_customer    String
+  customer       Customers   @relation(fields: [id_customer], references: [id])
+  id_deliverymen String
+  deliverymen    DeliveryMen @relation(fields: [id_deliverymen], references: [id])
+  item_name      String
+  created_at     DateTime    @default(now())
+  ended_at       DateTime
+
+  @@map("deliveries")
 }
