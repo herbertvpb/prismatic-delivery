@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { ensureAuthenticatedCustomer } from "./middlewares/ensureAuthenticatedCustomer";
 import { AuthenticateCustomerController } from "./modules/account/authenticateCustomer/AuthenticateCustomerController";
 import { AuthenticateDeliverymanController } from "./modules/account/authenticateDeliveryman/AuthenticateDeliverymanController";
 import { CreateCustomerController } from "./modules/customers/useCases/createCustomer/CreateCustomerController";
@@ -11,7 +12,8 @@ const createCustomerController = new CreateCustomerController();
 const authenticateCustomerController = new AuthenticateCustomerController();
 
 const createDeliverymanController = new CreateDeliverymanController();
-const authenticateDeliverymanController = new AuthenticateDeliverymanController();
+const authenticateDeliverymanController =
+  new AuthenticateDeliverymanController();
 
 const createDeliveryController = new CreateDeliveryController();
 
@@ -21,6 +23,10 @@ routes.post("/customer/auth/", authenticateCustomerController.handle);
 routes.post("/deliveryman", createDeliverymanController.handle);
 routes.post("/deliveryman/auth/", authenticateDeliverymanController.handle);
 
-routes.post("/delivery", createDeliveryController.handle);
+routes.post(
+  "/delivery",
+  ensureAuthenticatedCustomer,
+  createDeliveryController.handle
+);
 
 export { routes };
