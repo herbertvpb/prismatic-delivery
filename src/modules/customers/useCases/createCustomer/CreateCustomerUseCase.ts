@@ -8,7 +8,7 @@ interface ICreateCustomer {
 
 export class CreateCustomerUseCase {
   async execute({ username, password }: ICreateCustomer) {
-    const customersAlreadyExists = await prisma.customers.findFirst({
+    const customerAlreadyExists = await prisma.customers.findFirst({
       where: {
         username: {
           mode: "insensitive",
@@ -16,8 +16,8 @@ export class CreateCustomerUseCase {
       },
     });
 
-    if (customersAlreadyExists) {
-      throw new Error("Customers already exists");
+    if (customerAlreadyExists) {
+      throw new Error("Customer already exists");
     }
 
     const encryptedPassword = await hash(password, 10);
