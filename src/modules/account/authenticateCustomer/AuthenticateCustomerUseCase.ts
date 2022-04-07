@@ -11,9 +11,7 @@ export class AuthenticateCustomerUseCase {
   async execute({ username, password }: IAuthenticateCustomer) {
     const customer = await prisma.customers.findFirst({
       where: {
-        username: {
-          mode: "insensitive",
-        },
+        username,
       },
     });
 
