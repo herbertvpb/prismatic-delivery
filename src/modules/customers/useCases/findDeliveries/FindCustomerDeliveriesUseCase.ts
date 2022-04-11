@@ -1,11 +1,11 @@
 import { prisma } from "../../../../database/prismaClient";
 
-interface IFindDeliveries {
+interface IFindCustomerDeliveries {
   id_customer: string;
 }
 
-export class FindDeliveriesUseCase {
-  async execute({ id_customer }: IFindDeliveries) {
+export class FindCustomerDeliveriesUseCase {
+  async execute({ id_customer }: IFindCustomerDeliveries) {
     const deliveries = prisma.customers.findMany({
       where: {
         id: id_customer,

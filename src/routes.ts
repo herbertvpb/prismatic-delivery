@@ -8,26 +8,31 @@ import { CreateDeliverymanController } from "./modules/deliverymen/useCases/crea
 import { FindAvailableDeliveriesController } from "./modules/deliveries/useCases/findAvailableDeliveries/FindAvailableDeliveriesController";
 import { ensureAuthenticatedDeliveryman } from "./middlewares/ensureAuthenticatedDeliveryman";
 import { AssignDeliverymanController } from "./modules/deliveries/useCases/assignDeliveryman/AssignDeliverymanController";
-import { FindDeliveriesController } from "./modules/customers/useCases/findDeliveries/FindDeliveriesController";
+import { FindCustomerDeliveriesController } from "./modules/customers/useCases/findDeliveries/FindCustomerDeliveriesController";
+import { FindDeliverymanDeliveriesController } from "./modules/deliverymen/useCases/findDeliveries/FindDeliverymanDeliveriesController";
+import { ConcludeDeliveryController } from "./modules/deliveries/useCases/concludeDelivery/ConcludeDeliveryController";
 
 const routes = Router();
 
 const createCustomerController = new CreateCustomerController();
 const authenticateCustomerController = new AuthenticateCustomerController();
-const findCustomerDeliveriesController = new FindDeliveriesController();
+const findCustomerDeliveriesController = new FindCustomerDeliveriesController();
 
 const createDeliverymanController = new CreateDeliverymanController();
 const authenticateDeliverymanController =
   new AuthenticateDeliverymanController();
+const findDeliverymanDeliveriesController =
+  new FindDeliverymanDeliveriesController();
 
 const createDeliveryController = new CreateDeliveryController();
 const findAvailableDeliveriesController =
   new FindAvailableDeliveriesController();
 const assignDeliverymanController = new AssignDeliverymanController();
+const concludeDeliveryController = new ConcludeDeliveryController();
 
 routes.post("/customer", createCustomerController.handle);
 routes.post("/customer/auth/", authenticateCustomerController.handle);
-routes.post(
+routes.get(
   "/customer/deliveries/",
   ensureAuthenticatedCustomer,
   findCustomerDeliveriesController.handle
@@ -35,6 +40,11 @@ routes.post(
 
 routes.post("/deliveryman", createDeliverymanController.handle);
 routes.post("/deliveryman/auth/", authenticateDeliverymanController.handle);
+routes.get(
+  "/deliveryman/deliveries/",
+  ensureAuthenticatedDeliveryman,
+  findDeliverymanDeliveriesController.handle
+);
 
 routes.post(
   "/delivery",
@@ -50,6 +60,11 @@ routes.put(
   "/delivery/:id/assign-deliveryman",
   ensureAuthenticatedDeliveryman,
   assignDeliverymanController.handle
+);
+routes.put(
+  "/delivery/:id/conclude-delivery",
+  ensureAuthenticatedDeliveryman,
+  concludeDeliveryController.handle
 );
 
 export { routes };
